@@ -194,7 +194,7 @@ class Cmmffirst
   
 end
 
-#test = Cmmffirst.new(-1.0, 1.0, 5)
+test = Cmmffirst.new(-1.0, 1.0, 5)
 #p test.h
 #p test.x_i[3] - test.x_i[2]
 #p test.matrix_k_i_analit 1
