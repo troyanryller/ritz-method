@@ -16,7 +16,7 @@ module Math
 	end
 end
 
-class Cmmffirst
+class CMMFFirst
 	include Math
 	attr_reader :h, :x_i
 
@@ -180,7 +180,7 @@ class Cmmffirst
  
 end
 
-test = Cmmffirst.new(-1.0, 1.0, 5)
+test = CMMFFirst.new(-1.0, 1.0, 5)
 tmp1 = test.matrix_a_analit 
 puts tmp1.row_vectors()
 #p test.h
