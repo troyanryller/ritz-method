@@ -100,79 +100,16 @@ class Cmmffirst
     #@x_i[i-1]
   end
 
-  # DRY
+  
   def matrix_m_i i
-    rez = []
-    tmp = []
-    tmp << scalar_q_pfipfi(i-1, i-1)
-    tmp << scalar_q_pfipfi(i-1, i)
-    #p tmp
-    rez << tmp
-    tmp = []
-    tmp << scalar_q_pfipfi(i, i-1)
-    tmp << scalar_q_pfipfi(i, i)
-    #p tmp
-    rez << tmp
-    rez
+    Matrix.columns([ [scalar_q_pfipfi(i-1, i-1), scalar_q_pfipfi(i-1, i)], 
+                     [scalar_q_pfipfi(i, i-1), scalar_q_pfipfi(i, i)] ])
   end
 
-  #Hope it's correct :\
-  def matrix_m_i_analit i
-    rez = []
-    tmp = []
-    tmp1 = ( 1.0 / ( h_i( i ) * h_i( i ) ) ) *
-           ( 0.5 * ( @x_i[i] * @x_i[i] - @x_i[i-1] * @x_i[i-1] ) - 
-             @x_i[i] * cos(@x_i[i]) + @x_i[i-1] * cos(@x_i[i-1]) - 
-             sin(@x_i[i]) + sin(@x_i[i-1]) - @x_i[i]*@x_i[i] * ( @x_i[i] - @x_i[i-1] ) + 
-             @x_i[i] * @x_i[i] * cos(@x_i[i]) - @x_i[i] * @x_i[i] * cos(@x_i[i-1]) )
-    tmp2 = ( ( @x_i[i] * @x_i[i] * @x_i[i] ) / 3.0 - ( @x_i[i-1] * @x_i[i-1] * @x_i[i-1] ) / 3.0 -
-           @x_i[i] * @x_i[i] * cos(@x_i[i]) + @x_i[i-1] * @x_i[i-1] * cos(@x_i[i-1]) + 
-           2.0 * @x_i[i] * sin(@x_i[i]) - 2.0 * @x_i[i-1] * sin(@x_i[i-1]) + 
-           2.0 * @x_i[i] * cos(@x_i[i]) - 2.0 * @x_i[i-1] * cos(@x_i[i-1]) - 
-           ( ( @x_i[i-1] + @x_i[i] ) / 2.0 ) * ( @x_i[i]*@x_i[i] - @x_i[i-1]*@x_i[i-1] ) - 
-           ( @x_i[i-1] + @x_i[i] ) * ( -@x_i[i] * cos(@x_i[i]) + @x_i[i-1] * cos(@x_i[i-1]) -
-           sin(@x_i[i]) + sin(@x_i[i-1]) ) + @x_i[i] * @x_i[i-1] * ( @x_i[i] - @x_i[i-1] ) + 
-           @x_i[i] * @x_i[i-1] * ( -cos(@x_i[i]) + cos(@x_i[i-1]) ) ) *( -1.0 )
-    tmp << tmp1
-    tmp << tmp2
-    rez << tmp
-    tmp = []
-    tmp << tmp2
-    tmp << tmp1
-    rez << tmp
-    rez
-  end
-
-  #DRY again
   def matrix_k_i i
-    rez = []
-    tmp = []
-    tmp << scalar_p_pfipfi(i-1, i-1) 
-    tmp << scalar_p_pfipfi(i-1, i)
-    #p tmp
-    rez << tmp
-    tmp = []
-    tmp << scalar_p_pfipfi(i, i-1)
-    tmp << scalar_p_pfipfi(i, i)
-    #p tmp
-    rez << tmp
-    rez
-  end
-
-  def matrix_k_i_analit i
-    rez = []
-    tmp = []
-    tmp1 = ( 1.0 / ( h_i( i ) * h_i( i ) ) ) *
-           ( ( 1.0 / 3.0 ) * ( @x_i[i] - @x_i[i] ) + ( 2.0 / 9.0 ) * 
-            ( log(3.0 * @x_i[i] + 4.0) - log(3.0 * @x_i[i-1] + 4.0) ) ) 
-    tmp <<  tmp1
-    tmp <<  -tmp1
-    rez << tmp
-    tmp = []
-    tmp << -tmp1
-    tmp << tmp1
-    rez << tmp
-    rez
+    Matrix.columns([ [scalar_p_pfipfi(i-1, i-1), scalar_p_pfipfi(i-1, i)], 
+                     [scalar_p_pfipfi(i, i-1), scalar_p_pfipfi(i, i)] ])
+    #scalar_p_pfipfi(i-1, i)
   end
 
   def matrix_a i
@@ -190,11 +127,62 @@ class Cmmffirst
     rez << tmp
     rez
   end
-  
-  
+
+  def matrix_m_i_analit i
+    raise Exception if i < 1
+    element1 = ( 1.0 / ( h_i( i ) * h_i( i ) ) ) *
+           ( 0.5 * ( @x_i[i] * @x_i[i] - @x_i[i-1] * @x_i[i-1] ) - 
+             @x_i[i] * cos(@x_i[i]) + @x_i[i-1] * cos(@x_i[i-1]) - 
+             sin(@x_i[i]) + sin(@x_i[i-1]) - @x_i[i]*@x_i[i] * ( @x_i[i] - @x_i[i-1] ) + 
+             @x_i[i] * @x_i[i] * cos(@x_i[i]) - @x_i[i] * @x_i[i] * cos(@x_i[i-1]) )
+    element2 = ( ( @x_i[i] * @x_i[i] * @x_i[i] ) / 3.0 - ( @x_i[i-1] * @x_i[i-1] * @x_i[i-1] ) / 3.0 -
+           @x_i[i] * @x_i[i] * cos(@x_i[i]) + @x_i[i-1] * @x_i[i-1] * cos(@x_i[i-1]) + 
+           2.0 * @x_i[i] * sin(@x_i[i]) - 2.0 * @x_i[i-1] * sin(@x_i[i-1]) + 
+           2.0 * @x_i[i] * cos(@x_i[i]) - 2.0 * @x_i[i-1] * cos(@x_i[i-1]) - 
+           ( ( @x_i[i-1] + @x_i[i] ) / 2.0 ) * ( @x_i[i]*@x_i[i] - @x_i[i-1]*@x_i[i-1] ) - 
+           ( @x_i[i-1] + @x_i[i] ) * ( -@x_i[i] * cos(@x_i[i]) + @x_i[i-1] * cos(@x_i[i-1]) -
+           sin(@x_i[i]) + sin(@x_i[i-1]) ) + @x_i[i] * @x_i[i-1] * ( @x_i[i] - @x_i[i-1] ) + 
+           @x_i[i] * @x_i[i-1] * ( -cos(@x_i[i]) + cos(@x_i[i-1]) ) ) *( -1.0 )
+    [ [element1, element2], 
+      [element2, element1] ]
+  end
+
+  def matrix_k_i_analit i
+    raise Exception if i < 1
+    element = ( 1.0 / ( h_i( i ) * h_i( i ) ) ) *
+           ( ( 1.0 / 3.0 ) * ( @x_i[i] - @x_i[i] ) + ( 2.0 / 9.0 ) * 
+            ( log(3.0 * @x_i[i] + 4.0) - log(3.0 * @x_i[i-1] + 4.0) ) ) 
+    [ [element, -element], 
+      [-element, element] ]
+  end
+
+ def matrix_a_i_analit i
+   #@n.times{ |i| ( matrix_k_i_analit(i+1) + matrix_m_i_analit(i+1) ) }
+   Matrix.columns( matrix_k_i_analit(i) ) + Matrix.columns( matrix_m_i_analit(i) )
+ end
+
+ def matrix_a_analit 
+  m = Matrix.zero(@n).to_a
+  #m1 = matrix_a_i_analit(1).to_a
+  @n.times do |i|  
+    m2 = matrix_a_i_analit(i+1).to_a
+    if i==0
+      m[i][i] += m2[1][1]
+    else
+      m[i-1][i-1] += m2[0][0]
+      m[i-1][i] += m2[0][1]
+      m[i][i-1] += m2[1][0]
+      m[i][i] += m2[1][1]
+    end
+  end
+  me = Matrix[*m] 
+ end
+ 
 end
 
 test = Cmmffirst.new(-1.0, 1.0, 5)
+tmp1 = test.matrix_a_analit 
+puts tmp1.row_vectors()
 #p test.h
 #p test.x_i[3] - test.x_i[2]
 #p test.matrix_k_i_analit 1
